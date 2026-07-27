@@ -20,6 +20,18 @@ resource "aws_instance" "web" {
   tags = {
     Name = "HelloWorld"
   }
+
+    user_data = <<-EOF
+              #!/bin/bash
+              yum update -y
+              amazon-linux-extras enable java-openjdk11
+              yum install -y java-11-openjdk
+              wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.91/bin/apache-tomcat-9.0.91.tar.gz
+              tar xvf apache-tomcat-9.0.91.tar.gz -C /opt/
+              mv /opt/apache-tomcat-9.0.91 /opt/tomcat
+              chmod +x /opt/tomcat/bin/*.sh
+              /opt/tomcat/bin/startup.sh
+              EOF
 }
 
 resource "aws_security_group" "blog"{
