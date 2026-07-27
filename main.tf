@@ -55,7 +55,7 @@ resource "aws_security_group" "tomcat_sg" {
 # 3. Deploy Free-Tier EC2 Instance
 resource "aws_instance" "web" {
   ami           = data.aws_ami.app_ami.id
-  instance_type = "t2.micro" # Free Tier eligible
+  instance_type = "t3.micro" # Free Tier eligible
 
   # Attach the Security Group
   vpc_security_group_ids = [aws_security_group.tomcat_sg.id]
