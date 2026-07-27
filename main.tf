@@ -24,7 +24,7 @@ resource "aws_instance" "web" {
 
 resource "aws_security_group" "blog"{
   name        = "blog"
-  description = "Allow https in. Allow everything out"
+  description = "Allow https in. Allow everything out sec"
 
   vpc_id = data.aws_vpc.default.id
 }
