@@ -25,7 +25,10 @@ resource "aws_instance" "web" {
   instance_type = "t3.micro" # Free Tier eligible
 
   # Attach the Security Group
-  vpc_security_group_ids = [module.http_80_security_group.id]
+  vpc_security_group_ids = [
+    module.http_80_security_group.id,
+    module.tomcat_sg.id
+    ]
 
   # Automatically install Tomcat 10 on boot
   user_data = <<-EOF
@@ -60,6 +63,30 @@ module "http_80_security_group" {
       ip_protocol = "-1"
       cidr_ipv4   = "0.0.0.0/0"
       description = "Allow all outbound traffic"
+    }
+  }
+}
+
+module "tomcat_sg" {
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "~> 6.0"
+
+  name   = "tomcat-sg"
+  vpc_id = data.aws_vpc.default.id
+
+  ingress_rules = {
+    tomcat = {
+      ip_protocol = "tcp"
+      from_port   = 8080
+      to_port     = 8080
+      cidr_ipv4   = "0.0.0.0/0"
+    }
+  }
+
+  egress_rules = {
+    all = {
+      ip_protocol = "-1"
+      cidr_ipv4   = "0.0.0.0/0"
     }
   }
 }
