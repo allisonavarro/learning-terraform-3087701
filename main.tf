@@ -43,12 +43,21 @@ module "http_80_security_group" {
 
   name        = "http-80"
   description = "Security group for http-80"
-  vpc_id  = data.aws_vpc.default.id
+  vpc_id      = data.aws_vpc.default.id
 
-  ingress_rules = ["https-443-tcp","http-80-tcp"]
-  ingress_cidr_blocks = ["0.0.0.0/0"]
-  egress_rules = ["all-all"]
-  egress_cidr_blocks = ["0.0.0.0/0"]
+  # Opens HTTP (port 80) to the Internet
+  ingress_cidr_ipv4 = {
+    internet = "0.0.0.0/0"
+  }
+
+  # Allow all outbound traffic
+  egress_rules = {
+    all = {
+      ip_protocol = "-1"
+      cidr_ipv4   = "0.0.0.0/0"
+      description = "Allow all outbound traffic"
+    }
+  }
 }
 
 # 4. Output the public URL to easily click and test
